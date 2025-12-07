@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const seatData = {};
         seats.forEach(seat => {
             let val = seat.value.trim();
-            if (val === "") val = "Unnamed";
+            if (val === "") val = "";
             seat.value = val;
             seatData[seat.dataset.id] = val;
         });
@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
         seat.addEventListener("blur", event => {
             let value = event.target.value.trim();
             if (value === "") {
-                value = "Unnamed";
+                value = "";
                 event.target.value = value;
             }
 
