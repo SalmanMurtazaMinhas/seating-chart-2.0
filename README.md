@@ -7,6 +7,8 @@ It allows instructors to visually manage classroom seating, save multiple seatin
 
 This app includes a clean grid-based layout, a top control menu, and smooth toast notifications for user feedback.
 
+👉 **Use it online (no installation needed):**
+**[Deployed Site](https://salmanmurtazaminhas.github.io/seating-chart-2.0/)**
 ---
 
 ## **✔ Features**
