@@ -31,7 +31,7 @@ body {
     padding: 6px 10px;
     font-size: 14px;
     border-radius: 6px;
-    border: 1px solid #e53935;
+    border: 1px solid #3599e5;
     background: #222;
     color: #fff;
 }
@@ -41,7 +41,7 @@ body {
 .classroom {
     display: flex;
     flex-direction: column;
-    gap: 220px;           /* space between the two rows */
+    gap: 90px;           /* space between the two rows */
 }
 
 /* One row of 3 tables */
@@ -65,7 +65,7 @@ body {
     bottom: 40px;
     left: 30px;
     right: 30px;
-    border: 3px solid #e53935;
+    border: 3px solid #3599e5;
     border-radius: 10px;
     background: #222;
 }
@@ -104,7 +104,7 @@ body {
     width: 100px;
     height: 32px;
     border-radius: 8px;
-    border: 2px solid #e53935;
+    border: 2px solid #3599e5;
     background: #111;
     color: #fff;
     text-align: center;
