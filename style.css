@@ -1,0 +1,89 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    height: 100vh;
+    background: #111;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+}
+
+/* Whole classroom */
+.classroom {
+    display: flex;
+    flex-direction: column;
+    gap: 160px;           /* space between the two rows */
+}
+
+/* One row of 3 tables */
+.row {
+    display: flex;
+    gap: 350px;     /* increased from 200px */
+    justify-content: center;
+}
+
+/* Table container (vertical) */
+.table {
+    position: relative;
+    width: 180px;
+    height: 260px;
+}
+
+/* The rectangle table */
+.table-rect {
+    position: absolute;
+    top: 40px;
+    bottom: 40px;
+    left: 30px;
+    right: 30px;
+    border: 3px solid #e53935;
+    border-radius: 10px;
+    background: #222;
+}
+
+/* Side columns (left and right) */
+.side-col {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* move full name tags outside the table */
+.left-col {
+    left: -110px;
+    top: 70px;
+}
+
+.right-col {
+    right: -110px;
+    top: 70px;
+}
+
+/* Bottom row */
+.bottom-row {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 20px;
+}
+
+/* Seat = rectangular name tag now */
+.seat {
+    width: 120px;
+    height: 32px;
+    border-radius: 8px;
+    border: 2px solid #e53935;
+    background: #111;
+    color: #fff;
+    text-align: center;
+    font-size: 13px;
+    outline: none;
+    padding: 4px;
+}
