@@ -4,25 +4,50 @@
 
 body {
     margin: 0;
-    height: 100vh;
+    min-height: 100vh;
     background: #111;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;      /* stack menu + classroom vertically */
+    align-items: center;         /* center horizontally */
     font-family: Arial, sans-serif;
+    padding-top: 80px;           /* space below the fixed menu */
 }
 
-/* Whole classroom */
+/* -------- top menu (class selector) -------- */
+
+.menu {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.menu select,
+.menu input,
+.menu button {
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #e53935;
+    background: #222;
+    color: #fff;
+}
+
+/* -------- classroom layout -------- */
+
 .classroom {
     display: flex;
     flex-direction: column;
-    gap: 160px;           /* space between the two rows */
+    gap: 220px;           /* space between the two rows */
 }
 
 /* One row of 3 tables */
 .row {
     display: flex;
-    gap: 350px;     /* increased from 200px */
+    gap: 380px;           /* horizontal space between tables */
     justify-content: center;
 }
 
@@ -53,7 +78,7 @@ body {
     gap: 20px;
 }
 
-/* move full name tags outside the table */
+/* move name tags outside the table */
 .left-col {
     left: -110px;
     top: 70px;
@@ -74,9 +99,9 @@ body {
     gap: 20px;
 }
 
-/* Seat = rectangular name tag now */
+/* Seat = rectangular name tag */
 .seat {
-    width: 120px;
+    width: 100px;
     height: 32px;
     border-radius: 8px;
     border: 2px solid #e53935;
