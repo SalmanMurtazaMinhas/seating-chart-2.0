@@ -5,25 +5,30 @@ document.addEventListener("DOMContentLoaded", () => {
     const classNameInput = document.getElementById("classNameInput");
     const saveClassBtn = document.getElementById("saveClassBtn");
     const newClassBtn = document.getElementById("newClassBtn");
+    const deleteClassBtn = document.getElementById("deleteClassBtn");
 
-    // allClasses = { "SEB-BH-7": { "1-1": "Safa", ... }, ... }
-    let classes = JSON.parse(localStorage.getItem("allClasses")) || {};
+    // seatClasses = { "SEB-BH-7": { "1-1": "Safa", ... }, ... }
+    // use a unique key so it does not clash with your grid app
+    let seatClasses = JSON.parse(localStorage.getItem("seatAllClasses")) || {};
     let currentClass = null;
 
     function saveAllClasses() {
-        localStorage.setItem("allClasses", JSON.stringify(classes));
+        localStorage.setItem("seatAllClasses", JSON.stringify(seatClasses));
     }
 
     function clearSeats() {
-        seats.forEach(seat => seat.value = "");
+        seats.forEach(seat => {
+            seat.value = "";
+        });
     }
 
     function loadClass(className) {
-        if (!className || !classes[className]) {
+        if (!className || !seatClasses[className]) {
             clearSeats();
             return;
         }
-        const seatData = classes[className];
+
+        const seatData = seatClasses[className];
         seats.forEach(seat => {
             const id = seat.dataset.id;
             seat.value = seatData[id] || "";
@@ -33,17 +38,17 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderClassOptions() {
         classSelector.innerHTML = "";
 
-        Object.keys(classes).forEach(name => {
+        Object.keys(seatClasses).forEach(name => {
             const opt = document.createElement("option");
             opt.value = name;
             opt.textContent = name;
             classSelector.appendChild(opt);
         });
 
-        if (currentClass && classes[currentClass]) {
+        if (currentClass && seatClasses[currentClass]) {
             classSelector.value = currentClass;
         } else {
-            const names = Object.keys(classes);
+            const names = Object.keys(seatClasses);
             if (names.length > 0) {
                 currentClass = names[0];
                 classSelector.value = currentClass;
@@ -56,18 +61,18 @@ document.addEventListener("DOMContentLoaded", () => {
         loadClass(currentClass);
     }
 
-    // If no classes at all, create one default
-    if (Object.keys(classes).length === 0) {
+    // If no classes yet, create one default
+    if (Object.keys(seatClasses).length === 0) {
         currentClass = "Class 1";
-        classes[currentClass] = {};
+        seatClasses[currentClass] = {};
         saveAllClasses();
     } else {
-        currentClass = Object.keys(classes)[0];
+        currentClass = Object.keys(seatClasses)[0];
     }
 
     renderClassOptions();
 
-    // Save / rename current class with current seat values
+    // Save or rename current class
     saveClassBtn.addEventListener("click", () => {
         const name = classNameInput.value.trim();
         if (!name) {
@@ -75,33 +80,58 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        // collect seat data
         const seatData = {};
         seats.forEach(seat => {
-            const val = seat.value.trim();
-            seatData[seat.dataset.id] = val === "" ? "Unnamed" : val;
-            if (val === "") seat.value = "Unnamed";
+            let val = seat.value.trim();
+            if (val === "") val = "Unnamed";
+            seat.value = val;
+            seatData[seat.dataset.id] = val;
         });
 
-        // if renaming an existing class
-        if (currentClass && name !== currentClass && classes[currentClass]) {
-            delete classes[currentClass];
+        // handle rename: remove old key if changed
+        if (currentClass && name !== currentClass && seatClasses[currentClass]) {
+            delete seatClasses[currentClass];
         }
 
         currentClass = name;
-        classes[currentClass] = seatData;
+        seatClasses[currentClass] = seatData;
         saveAllClasses();
         renderClassOptions();
-        alert("Class saved!");
+        showToast("Class saved", "success");
     });
 
-    // Start a fresh (unsaved) seating chart
+    // Start a fresh unsaved seating chart
     newClassBtn.addEventListener("click", () => {
         currentClass = null;
         classNameInput.value = "";
         classSelector.value = "";
         clearSeats();
     });
+
+    // Delete currently selected class
+    deleteClassBtn.addEventListener("click", () => {
+    if (!currentClass) return;
+
+    delete seatClasses[currentClass];
+    saveAllClasses();
+
+    const remaining = Object.keys(seatClasses);
+
+    if (remaining.length === 0) {
+        currentClass = null;
+        classNameInput.value = "";
+        classSelector.innerHTML = "";
+        clearSeats();
+        showToast("Class deleted", "delete");
+        return;
+    }
+
+    currentClass = remaining[0];
+    renderClassOptions();
+
+    showToast("Class deleted", "delete");
+});
+
 
     // Change class from dropdown
     classSelector.addEventListener("change", () => {
@@ -110,26 +140,43 @@ document.addEventListener("DOMContentLoaded", () => {
         loadClass(currentClass);
     });
 
-    // Optional: auto-update current class on blur (if currentClass exists)
+    // Per-seat behaviors
     seats.forEach(seat => {
-        seat.addEventListener("blur", (event) => {
+        seat.addEventListener("focus", event => {
+            event.target.select();
+        });
+
+        seat.addEventListener("blur", event => {
             let value = event.target.value.trim();
             if (value === "") {
                 value = "Unnamed";
                 event.target.value = value;
             }
 
-            if (!currentClass) return; // only autosave when a class is selected/saved
+            if (!currentClass) return; // only autosave if some class is active
 
-            if (!classes[currentClass]) {
-                classes[currentClass] = {};
+            if (!seatClasses[currentClass]) {
+                seatClasses[currentClass] = {};
             }
-            classes[currentClass][event.target.dataset.id] = value;
+            seatClasses[currentClass][event.target.dataset.id] = value;
             saveAllClasses();
-        });
-
-        seat.addEventListener("focus", (event) => {
-            event.target.select();
         });
     });
 });
+
+function showToast(message, type = "success") {
+    const toast = document.getElementById("toast");
+
+    toast.innerHTML = `
+        <span class="${type === 'success' ? 'toast-success' : 'toast-delete'}">
+            ${type === "success" ? "✔" : "✖"}
+        </span>
+        ${message}
+    `;
+
+    toast.classList.add("show");
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+    }, 1800);
+}
